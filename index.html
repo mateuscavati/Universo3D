@@ -756,6 +756,9 @@ $('#addspool').onclick = () => {
 
 /* ================= ENCOMENDAS ================= */
 let editId = null, formFil = [], filtro = 'Ativas';
+// ativa = ainda em produção OU ainda não paga (canceladas não contam)
+const faltaPagar = o => Math.max(0, num(o.qtd) * num(o.valor) - num(o.sinal)) > 0.005;
+const ehAtiva = o => o.status !== 'Cancelada' && (o.status !== 'Entregue' || faltaPagar(o));
 $('#o-status').innerHTML = STATUS.map(s => `<option>${s}</option>`).join('');
 function renderSelects(){
   $('#o-canal').innerHTML = S.canais.map(c => `<option value="${c.id}">${esc(c.nome)}</option>`).join('');
@@ -876,13 +879,13 @@ function renderEncomendas(){
   renderSelects();
   const filtros = ['Ativas','Todas',...STATUS];
   $('#enc-filtro').innerHTML = filtros.map(f => {
-    const n = f === 'Todas' ? S.orders.length : f === 'Ativas' ? S.orders.filter(o => !['Entregue','Cancelada'].includes(o.status)).length : S.orders.filter(o => o.status === f).length;
+    const n = f === 'Todas' ? S.orders.length : f === 'Ativas' ? S.orders.filter(ehAtiva).length : S.orders.filter(o => o.status === f).length;
     return `<button class="chip ${f===filtro?'on':''}" data-f="${f}">${f} <small>${n}</small></button>`;
   }).join('');
   $$('#enc-filtro .chip').forEach(b => b.onclick = () => { filtro = b.dataset.f; renderEncomendas(); });
 
   const q = $('#enc-busca').value.toLowerCase();
-  let lista = S.orders.filter(o => filtro === 'Todas' || (filtro === 'Ativas' ? !['Entregue','Cancelada'].includes(o.status) : o.status === filtro))
+  let lista = S.orders.filter(o => filtro === 'Todas' || (filtro === 'Ativas' ? ehAtiva(o) : o.status === filtro))
     .filter(o => !q || `${o.cliente} ${o.peca} ${o.contato}`.toLowerCase().includes(q));
   lista.sort((a, b) => (a.prazo || '9999') .localeCompare(b.prazo || '9999'));
 
