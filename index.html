@@ -286,7 +286,7 @@ footer{text-align:center;color:#4f5a78;font-size:12px;padding:10px 0 30px}
     <h2><span class="n">1</span>Peça</h2>
     <div class="row">
       <div class="f" style="grid-column:span 2"><label>Nome da peça</label><input id="c-nome" data-k="nome" placeholder="Ex.: Vaso geométrico 15 cm"></div>
-      <div class="f"><label>Peças por impressão</label><input type="number" min="1" step="1" data-k="pecas"><small>Custos de máquina são divididos</small></div>
+      <div class="f"><label>Peças por impressão</label><input type="number" min="1" step="1" data-k="pecas"><small>O custo total da impressão é dividido entre as peças</small></div>
     </div>
   </div>
 
@@ -314,7 +314,7 @@ footer{text-align:center;color:#4f5a78;font-size:12px;padding:10px 0 30px}
   </div>
 
   <div class="card">
-    <h2><span class="n">4</span>Mão de obra e extras <small style="text-transform:none;letter-spacing:0;font-weight:400">(por peça)</small></h2>
+    <h2><span class="n">4</span>Mão de obra e extras <small style="text-transform:none;letter-spacing:0;font-weight:400">(da impressão inteira)</small></h2>
     <div class="row">
       <div class="f"><label>Preparo + pós-processamento</label><div class="unit"><input type="number" min="0" data-k="maoMin"><em>min</em></div><small>Fatiar, retirar suporte, lixar, pintar</small></div>
       <div class="f"><label>Valor da sua hora</label><div class="unit pre"><em>R$</em><input type="number" min="0" data-k="maoHora"></div></div>
@@ -603,7 +603,7 @@ function custos(){
   const mao = num(c.maoMin) / 60 * num(c.maoHora);
   const itens = [
     ['Filamento', filamento / n], ['Energia', energia / n], ['Desgaste da máquina', maquina / n],
-    ['Margem para falhas', falha / n], ['Mão de obra', mao], ['Embalagem', num(c.embalagem)], ['Outros', num(c.outros)]
+    ['Margem para falhas', falha / n], ['Mão de obra', mao / n], ['Embalagem', num(c.embalagem) / n], ['Outros', num(c.outros) / n]
   ];
   return { itens, total: itens.reduce((a, b) => a + b[1], 0), n, gramas, hrs };
 }
