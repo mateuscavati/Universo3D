@@ -173,7 +173,7 @@ body{overflow-x:hidden}
   .hdr-right>button,.hdr-right>label{display:none}
   .syncpill{padding:6px 10px}
   /* menu vira barra de abas embaixo */
-  nav{position:fixed;left:0;right:0;bottom:0;z-index:30;display:grid;grid-template-columns:repeat(4,1fr);gap:0;padding:6px 6px calc(6px + env(safe-area-inset-bottom));border:0;border-top:1px solid var(--line);border-radius:0;background:#0a0f1fef}
+  nav{position:fixed;left:0;right:0;bottom:0;z-index:30;display:grid;grid-template-columns:repeat(5,1fr);gap:0;padding:6px 4px calc(6px + env(safe-area-inset-bottom));border:0;border-top:1px solid var(--line);border-radius:0;background:#0a0f1fef}
   nav button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:52px;padding:4px 2px;border-radius:12px;font-size:11.5px;line-height:1.1}
   nav button.on{background:transparent;color:var(--acc);box-shadow:none}
   nav button.on .ico{background:var(--acc-soft);box-shadow:0 0 0 1px #ff7a1a55}
@@ -260,6 +260,53 @@ body{overflow-x:hidden}
 .pgto .unit{flex:1;min-width:0}
 .pgto input{padding-top:5px;padding-bottom:5px;font-size:13px}
 .btn.ghost.sm{white-space:nowrap}
+/* ---------- dashboard ---------- */
+.dash-top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.dash-h1{margin:0;font-size:22px;font-weight:800}
+.mesnav{display:flex;align-items:center;gap:10px}
+.mesnav b{min-width:150px;text-align:center;font-size:15px}
+.kpi .d{font-size:12px;margin-top:4px;color:var(--muted)}
+.kpi .d.up{color:var(--ok)}.kpi .d.down{color:var(--bad)}
+.dgrid{display:grid;grid-template-columns:1fr 1fr;gap:0 16px}
+@media(max-width:980px){.dgrid{grid-template-columns:1fr}}
+.insights{margin:0;padding:0;list-style:none;display:grid;gap:8px}
+.insights li{display:flex;gap:10px;align-items:flex-start;line-height:1.45;font-size:14px}
+.insights li i{font-style:normal;flex:none;width:22px;text-align:center}
+.vbars{display:flex;align-items:flex-end;gap:2px;height:180px;padding-top:18px;border-bottom:1px solid var(--line);position:relative}
+.vbars .col{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%;min-width:0;cursor:default;outline:none}
+.vbars .bar{width:100%;max-width:44px;background:#e76624;border-radius:4px 4px 0 0;min-height:0;transition:filter .12s}
+.vbars .bar.zero{background:transparent}
+.vbars .bar.muted{background:#3a4766}
+.vbars .col:hover .bar,.vbars .col:focus .bar{filter:brightness(1.25)}
+.vbars .lbl{font-size:11px;color:var(--muted);margin-top:6px;height:14px;white-space:nowrap}
+.vbars .val{font-size:11px;color:var(--ink);margin-bottom:4px;white-space:nowrap}
+.vlabels{display:flex;gap:2px}.vlabels span{flex:1;text-align:center;font-size:11px;color:var(--muted);padding-top:6px;min-width:0;white-space:nowrap}
+.hbars{display:grid;gap:10px}
+.hbar{display:grid;grid-template-columns:minmax(90px,34%) 1fr auto;gap:10px;align-items:center;font-size:13px;outline:none}
+.hbar .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hbar .trk{height:10px;background:var(--line);border-radius:5px;overflow:hidden}
+.hbar .trk div{height:100%;background:#338ced;border-radius:5px}
+.hbar .vl{font-variant-numeric:tabular-nums;font-weight:700;white-space:nowrap}
+.hbar .vl small{color:var(--muted);font-weight:400}
+.hbar:hover .trk div,.hbar:focus .trk div{filter:brightness(1.25)}
+.rank{width:100%;border-collapse:collapse;font-size:13px}
+.rank td{padding:7px 4px;border-bottom:1px solid var(--line)}
+.rank tr:last-child td{border:0}
+.rank .pos{color:var(--muted);width:24px}
+.pipe{display:flex;flex-wrap:wrap;gap:8px}
+.pipe div{flex:1;min-width:110px;border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:#ffffff06}
+.pipe b{display:block;font-size:22px}
+.pipe span{font-size:12px;color:var(--muted)}
+.dempty{color:var(--muted);font-size:13px;padding:24px 0;text-align:center}
+.dtip{position:fixed;pointer-events:none;z-index:60;background:#1a2550;border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:12px;color:var(--muted);opacity:0;transition:opacity .1s;white-space:nowrap}
+.dtip b{display:block;color:#fff;font-size:14px}
+.dtip.on{opacity:1}
+@media (max-width:700px){
+  .dash-top{align-items:stretch}.mesnav{justify-content:space-between;width:100%}
+  .vbars{height:150px}.vbars .val{display:none}
+  .hbar{grid-template-columns:minmax(80px,38%) 1fr auto}
+  .pipe div{min-width:calc(33% - 8px);padding:8px 10px}.pipe b{font-size:18px}
+}
 footer{text-align:center;color:#4f5a78;font-size:12px;padding:10px 0 30px}
 </style>
 </head>
@@ -270,6 +317,7 @@ footer{text-align:center;color:#4f5a78;font-size:12px;padding:10px 0 30px}
     <button data-tab="calc" class="on"><span class="ico">🧮</span><span class="lg">Calculadora</span><span class="sm">Calcular</span></button>
     <button data-tab="estoque"><span class="ico">🧵</span><span class="lg">Estoque de filamentos</span><span class="sm">Estoque</span></button>
     <button data-tab="encomendas"><span class="ico">📦</span><span class="lg">Encomendas</span><span class="sm">Pedidos</span></button>
+    <button data-tab="dashboard"><span class="ico">📊</span><span class="lg">Dashboard</span><span class="sm">Painel</span></button>
     <button data-tab="config"><span class="ico">⚙️</span><span class="lg">Configurações</span><span class="sm">Ajustes</span></button>
   </nav>
   <div class="hdr-right">
@@ -425,6 +473,30 @@ footer{text-align:center;color:#4f5a78;font-size:12px;padding:10px 0 30px}
     <div id="enc-lista"></div>
   </div>
 </section>
+<!-- ================= DASHBOARD ================= -->
+<section class="tab" id="tab-dashboard">
+  <div class="dash-top">
+    <div><h1 class="dash-h1">Dashboard</h1><p class="note" style="margin:2px 0 0">Números do mês e análises das suas vendas.</p></div>
+    <div class="mesnav" role="group" aria-label="Mês">
+      <button class="btn gray sm" id="d-ant" aria-label="Mês anterior">‹</button>
+      <b id="d-mes"></b>
+      <button class="btn gray sm" id="d-prox" aria-label="Próximo mês">›</button>
+    </div>
+  </div>
+  <div class="kpis" id="d-kpis"></div>
+  <div class="card"><h2>💡 Análises do mês</h2><ul class="insights" id="d-ins"></ul></div>
+  <div class="dgrid">
+    <div class="card"><h2 id="d-t-dia">Recebido por dia</h2><div class="vbars" id="d-dias"></div></div>
+    <div class="card"><h2>Faturamento dos últimos 6 meses</h2><div class="vbars" id="d-meses"></div></div>
+    <div class="card"><h2>Vendas por canal</h2><div class="hbars" id="d-canais"></div></div>
+    <div class="card"><h2>Filamento consumido</h2><div class="hbars" id="d-fil"></div></div>
+    <div class="card"><h2>Melhores clientes</h2><div id="d-cli"></div></div>
+    <div class="card"><h2>Peças mais vendidas</h2><div id="d-pecas"></div></div>
+  </div>
+  <div class="card"><h2>Encomendas agora, por status</h2><div class="pipe" id="d-pipe"></div></div>
+  <div id="d-tip" class="dtip" role="tooltip"></div>
+</section>
+
 <!-- ================= CONFIGURAÇÕES ================= -->
 <section class="tab" id="tab-config">
   <div class="card so-celular">
@@ -537,6 +609,7 @@ $$('nav button').forEach(b => b.onclick = () => {
   $$('.tab').forEach(t => t.classList.toggle('on', t.id === 'tab-' + b.dataset.tab));
   if (b.dataset.tab === 'estoque') renderEstoque();
   if (b.dataset.tab === 'encomendas') renderEncomendas();
+  if (b.dataset.tab === 'dashboard') renderDashboard();
   if (b.dataset.tab === 'calc') { renderFil(); calc(); renderOrcbar(); }
 });
 
@@ -672,7 +745,7 @@ function salvarOrcamentoNoPedido(o){
   const preco = precoSugerido(k.total, canal);
   if (!isFinite(preco) || preco <= 0) return toast('Confira o markup e as taxas antes de salvar o orçamento');
   if (o.baixado) { const st = o.status; o.status = 'A orçar'; aplicaEstoque(o); o.status = st; }
-  o.valor = +preco.toFixed(2); o.canal = canal.id;
+  o.valor = +preco.toFixed(2); o.canal = canal.id; o.custoUnit = +k.total.toFixed(4);
   o.filamentos = S.calc.fil.filter(f => num(f.g) > 0).map(f => ({spool: f.spool || '', g: num(f.g) / k.n * o.qtd, nomeManual: f.spool ? '' : 'Filamento (preço manual)'}));
   o.duracao = +(k.hrs / k.n * o.qtd).toFixed(2);
   const antes = o.status; o.status = 'Orçamento'; aplicaEstoque(o);
@@ -681,10 +754,11 @@ function salvarOrcamentoNoPedido(o){
   toast(`Orçamento de ${brl(o.valor * o.qtd)} salvo no pedido`);
   if (antes === 'A orçar' && S.wpp.autoOrc) avisarWpp(o, 'orc');
 }
+let formCusto = null; // custo por peça vindo da calculadora
 $('#virarEncomenda').onclick = () => {
   const ped = pedidoEmOrcamento(); if (ped) return salvarOrcamentoNoPedido(ped);
   const k = custos(), canal = S.canais.find(c => c.id === S.calc.canal) || S.canais[0];
-  limparForm();
+  limparForm(); formCusto = +k.total.toFixed(4);
   $('#o-peca').value = S.calc.nome;
   $('#o-valor').value = (precoSugerido(k.total, canal) || 0).toFixed(2);
   $('#o-canal').value = canal.id;
@@ -794,7 +868,7 @@ function setModo(m){
 $$('#o-modo button').forEach(b => b.onclick = () => setModo(b.dataset.m));
 $('#o-status').addEventListener('change', e => setModo(e.target.value === 'A orçar' ? 'pedido' : 'orc'));
 function limparForm(){
-  editId = null; formFil = [];
+  editId = null; formFil = []; formCusto = null;
   ['#o-cliente','#o-contato','#o-peca','#o-valor','#o-notas','#o-prazo','#o-inicio','#o-dur','#o-fg'].forEach(s => $(s).value = '');
   $('#o-qtd').value = 1; $('#o-qtd').dataset.prev = 1; $('#o-sinal').value = 0; $('#o-status').value = 'Orçamento';
   renderSelects(); setModo('orc'); $('#o-canal').value = S.calc.canal;
@@ -828,12 +902,16 @@ $('#o-salvar').onclick = () => {
     const o = alvo = S.orders.find(x => x.id === editId);
     if (dados.status === 'Pronta' && o.status !== 'Pronta') avisar = o;
     if (o.baixado) { o.status = 'A orçar'; aplicaEstoque(o); } // devolve com o consumo antigo
+    const dif = +(dados.sinal - num(o.sinal)).toFixed(2);
+    if (Math.abs(dif) > 0.004) { pagamentosDe(o, true); (o.pagamentos = o.pagamentos || []).push({v:dif, em:new Date().toISOString()}); }
     if (dados.status === 'Orçamento' && o.status === 'A orçar' && dados.valor > 0) avisar = 'orc-edit';
     Object.assign(o, dados, {filamentos: formFil}); aplicaEstoque(o);
     toast('Encomenda atualizada');
   } else {
     // ao criar, o consumo informado é por unidade quando vem da calculadora; aqui já é o total da encomenda
-    const o = alvo = Object.assign({id:uid(), criado:new Date().toISOString(), baixado:false, filamentos:formFil}, dados);
+    const agoraISO = new Date().toISOString();
+    const o = alvo = Object.assign({id:uid(), criado:agoraISO, baixado:false, filamentos:formFil, pagamentos: dados.sinal > 0 ? [{v:dados.sinal, em:agoraISO}] : []}, dados);
+    if (formCusto != null) o.custoUnit = formCusto;
     S.orders.unshift(o); aplicaEstoque(o);
     if (o.status === 'Pronta' || o.status === 'Orçamento') avisar = o;
     toast('Encomenda salva');
@@ -873,6 +951,7 @@ function receberPagamento(o, valor){
   const falta = Math.max(0, num(o.qtd) * num(o.valor) - num(o.sinal));
   if (!(valor > 0)) return toast('Digite o valor recebido');
   const v = Math.min(valor, falta);
+  pagamentosDe(o, true);
   o.sinal = +(num(o.sinal) + v).toFixed(2);
   (o.pagamentos = o.pagamentos || []).push({v, em:new Date().toISOString()});
   const resta = falta - v;
@@ -965,17 +1044,35 @@ function kpisEncomendas(){
   const ativas = S.orders.filter(o => !['Entregue','Cancelada'].includes(o.status));
   const aReceber = S.orders.filter(o => !['A orçar','Orçamento','Cancelada'].includes(o.status)).reduce((a, o) => a + Math.max(0, o.qtd * o.valor - o.sinal), 0);
   const atrasadas = ativas.filter(o => o.prazo && new Date(o.prazo + 'T00:00:00') < hoje()).length;
-  const m = new Date(), ini = new Date(m.getFullYear(), m.getMonth(), 1);
-  const mes = S.orders.filter(o => o.status === 'Entregue' && new Date(o.entregue || o.criado) >= ini).reduce((a, o) => a + o.qtd * o.valor, 0);
+  const atual = mesChave(new Date()), mes = recebidoNoMes(atual);
   $('#enc-kpis').innerHTML = `
     <div class="kpi"><div class="l">Em andamento</div><div class="v">${ativas.length}</div></div>
     <div class="kpi"><div class="l">A receber</div><div class="v">${brl(aReceber)}</div></div>
-    <div class="kpi"><div class="l">Entregue este mês</div><div class="v">${brl(mes)}</div></div>
+    <div class="kpi"><div class="l">Faturamento de ${nomeMes(atual)}</div><div class="v">${brl(mes)}</div></div>
     <div class="kpi ${atrasadas?'alert':''}"><div class="l">Atrasadas</div><div class="v">${atrasadas}</div></div>`;
 }
 // registra data de entrega
 const _aplica = aplicaEstoque;
-aplicaEstoque = o => { if (o.status === 'Entregue' && !o.entregue) o.entregue = new Date().toISOString(); if (o.status !== 'Entregue') delete o.entregue; _aplica(o); };
+aplicaEstoque = o => {
+  const agora = new Date().toISOString();
+  if (o.status === 'Entregue' && !o.entregue) o.entregue = agora; if (o.status !== 'Entregue') delete o.entregue;
+  if (!['A orçar','Orçamento','Cancelada'].includes(o.status) && !o.confirmadaEm) o.confirmadaEm = agora; // data da venda
+  const antes = o.baixado; _aplica(o);
+  if (o.baixado && !antes) o.baixadoEm = agora; if (!o.baixado) delete o.baixadoEm;
+};
+// pagamentos com data; valores antigos sem histórico contam na data de criação
+function pagamentosDe(o, fixar){
+  const lista = (o.pagamentos || []).slice(), soma = lista.reduce((a, p) => a + num(p.v), 0), resto = +(num(o.sinal) - soma).toFixed(2);
+  if (resto > 0.004) {
+    const leg = {v:resto, em:o.confirmadaEm || o.criado || new Date().toISOString(), legado:true};
+    lista.unshift(leg);
+    if (fixar) (o.pagamentos = o.pagamentos || []).unshift(leg); // só grava quando vai registrar um pagamento novo
+  }
+  return lista;
+}
+const mesChave = d => { const x = new Date(d); return x.getFullYear() * 12 + x.getMonth(); };
+const nomeMes = (chave, ano) => { const d = new Date(Math.floor(chave / 12), chave % 12, 1); return d.toLocaleDateString('pt-BR', ano ? {month:'long', year:'numeric'} : {month:'long'}); };
+function recebidoNoMes(chave){ return S.orders.reduce((a, o) => a + pagamentosDe(o).filter(p => mesChave(p.em) === chave).reduce((b, p) => b + num(p.v), 0), 0); }
 $('#enc-busca').addEventListener('input', renderEncomendas);
 
 /* ---------- WhatsApp ---------- */
@@ -1076,6 +1173,152 @@ $('#importar').onchange = e => {
 };
 
 /* ---------- início ---------- */
+/* ---------- dashboard ---------- */
+let dMes = mesChave(new Date());
+const VENDIDA = o => !['A orçar','Orçamento','Cancelada'].includes(o.status);
+const dataVenda = o => o.status === 'Cancelada' ? null : (o.confirmadaEm || (VENDIDA(o) ? o.criado : null));
+const compacto = v => v >= 1000 ? (v / 1000).toLocaleString('pt-BR', {maximumFractionDigits:1}) + ' mil' : Math.round(v).toLocaleString('pt-BR');
+const somar = (arr, f) => arr.reduce((a, x) => a + f(x), 0);
+$('#d-ant').onclick = () => { dMes--; renderDashboard(); };
+$('#d-prox').onclick = () => { if (dMes < mesChave(new Date())) { dMes++; renderDashboard(); } };
+
+function hbarsHTML(itens, fmt){
+  if (!itens.length) return '<div class="dempty">Sem dados neste mês.</div>';
+  const max = Math.max(...itens.map(i => i.v)) || 1;
+  return itens.map(i => `<div class="hbar" tabindex="0" data-tl="${esc(i.nome)}" data-tv="${esc(fmt(i.v))}${i.extra ? ' · ' + esc(i.extra) : ''}">
+    <span class="nm">${i.dot ? `<span class="dot" style="background:${esc(i.dot)}"></span>` : ''}${esc(i.nome)}</span>
+    <span class="trk"><div style="width:${Math.max(2, i.v / max * 100)}%"></div></span>
+    <span class="vl">${esc(fmt(i.v))}${i.extra ? ` <small>${esc(i.extra)}</small>` : ''}</span></div>`).join('');
+}
+function vbarsHTML(itens, fmtTip, mostrarValor){
+  const max = Math.max(...itens.map(i => i.v), 0);
+  return itens.map(i => `<div class="col" tabindex="0" data-tl="${esc(i.tl)}" data-tv="${esc(fmtTip(i.v))}">
+    ${mostrarValor && i.v > 0 ? `<span class="val">${esc(compacto(i.v))}</span>` : ''}
+    <div class="bar ${i.v <= 0 ? 'zero' : ''} ${i.muted ? 'muted' : ''}" style="height:${max > 0 ? i.v / max * 100 : 0}%"></div></div>`).join('');
+}
+
+function renderDashboard(){
+  const atual = mesChave(new Date()); if (dMes > atual) dMes = atual;
+  const nome = nomeMes(dMes), nomeAnt = nomeMes(dMes - 1);
+  const mesTxt = nomeMes(dMes, true); $('#d-mes').textContent = mesTxt.charAt(0).toUpperCase() + mesTxt.slice(1);
+  $('#d-prox').disabled = dMes >= atual;
+
+  // números
+  const fat = recebidoNoMes(dMes), fatAnt = recebidoNoMes(dMes - 1);
+  const vendas = S.orders.filter(o => dataVenda(o) && mesChave(dataVenda(o)) === dMes);
+  const totalV = somar(vendas, o => num(o.qtd) * num(o.valor));
+  const ticket = vendas.length ? totalV / vendas.length : 0;
+  const comCusto = vendas.filter(o => o.custoUnit != null);
+  const lucroDe = o => { const c = S.canais.find(x => x.id === o.canal) || {pct:0, fixo:0}; return (num(o.valor) - taxasEm(num(o.valor), c) - num(o.custoUnit)) * num(o.qtd); };
+  const lucro = somar(comCusto, lucroDe), baseLucro = somar(comCusto, o => num(o.qtd) * num(o.valor));
+  const entregues = S.orders.filter(o => o.entregue && mesChave(o.entregue) === dMes);
+  const noPrazo = entregues.filter(o => !o.prazo || new Date(o.entregue) <= new Date(o.prazo + 'T23:59:59')).length;
+  const criados = S.orders.filter(o => o.criado && mesChave(o.criado) === dMes && o.status !== 'A orçar');
+  const convertidos = criados.filter(o => dataVenda(o)).length;
+  const pendentes = S.orders.filter(o => VENDIDA(o) && faltaPagar(o));
+  const aReceber = somar(pendentes, o => Math.max(0, num(o.qtd) * num(o.valor) - num(o.sinal)));
+  const delta = fatAnt > 0 ? (fat - fatAnt) / fatAnt * 100 : null;
+
+  $('#d-kpis').innerHTML = `
+    <div class="kpi"><div class="l">Faturamento de ${nome}</div><div class="v">${brl(fat)}</div>
+      <div class="d ${delta == null ? '' : delta >= 0 ? 'up' : 'down'}">${delta == null ? (fat > 0 ? `sem recebimentos em ${nomeAnt}` : 'valor recebido no mês') : `${delta >= 0 ? '▲' : '▼'} ${pct(Math.abs(delta))} vs. ${nomeAnt}`}</div></div>
+    <div class="kpi"><div class="l">Vendas fechadas</div><div class="v">${brl(totalV)}</div><div class="d">${vendas.length} encomenda${vendas.length === 1 ? '' : 's'} confirmada${vendas.length === 1 ? '' : 's'}</div></div>
+    <div class="kpi"><div class="l">Ticket médio</div><div class="v">${brl(ticket)}</div><div class="d">por encomenda</div></div>
+    <div class="kpi"><div class="l">Lucro estimado</div><div class="v">${comCusto.length ? brl(lucro) : '—'}</div><div class="d">${comCusto.length ? `margem ${pct(lucro / baseLucro * 100)} · ${comCusto.length} de ${vendas.length} com custo da calculadora` : 'só para encomendas criadas pela calculadora'}</div></div>
+    <div class="kpi"><div class="l">Entregas</div><div class="v">${entregues.length}</div><div class="d">${entregues.length ? `${pct(noPrazo / entregues.length * 100)} no prazo` : 'nenhuma no mês'}</div></div>
+    <div class="kpi ${aReceber > 0 ? '' : ''}"><div class="l">A receber (hoje)</div><div class="v">${brl(aReceber)}</div><div class="d">${pendentes.length} encomenda${pendentes.length === 1 ? '' : 's'} com saldo</div></div>`;
+
+  // recebido por dia
+  const ano = Math.floor(dMes / 12), mesN = dMes % 12, dias = new Date(ano, mesN + 1, 0).getDate();
+  const porDia = Array(dias).fill(0);
+  S.orders.forEach(o => pagamentosDe(o).forEach(pg => { const d = new Date(pg.em); if (mesChave(d) === dMes) porDia[d.getDate() - 1] += num(pg.v); }));
+  $('#d-t-dia').textContent = `Recebido por dia em ${nome}`;
+  $('#d-dias').innerHTML = vbarsHTML(porDia.map((v, i) => ({v, tl:`${i + 1} de ${nome}`})), brl, false)
+  const lbl = $('#d-dias').nextElementSibling?.classList?.contains('vlabels') ? $('#d-dias').nextElementSibling : null; if (lbl) lbl.remove();
+  $('#d-dias').insertAdjacentHTML('afterend', `<div class="vlabels">${porDia.map((_, i) => `<span>${(i === 0 || (i + 1) % 5 === 0) ? i + 1 : ''}</span>`).join('')}</div>`);
+
+  // últimos 6 meses
+  const meses = []; for (let k = dMes - 5; k <= dMes; k++) meses.push({k, v:recebidoNoMes(k)});
+  $('#d-meses').innerHTML = vbarsHTML(meses.map(m => ({v:m.v, tl:nomeMes(m.k, true), muted:m.k !== dMes})), brl, true);
+  const lbl2 = $('#d-meses').nextElementSibling; if (lbl2 && lbl2.classList.contains('vlabels')) lbl2.remove();
+  $('#d-meses').insertAdjacentHTML('afterend', `<div class="vlabels">${meses.map(m => `<span>${nomeMes(m.k).slice(0, 3)}</span>`).join('')}</div>`);
+
+  // canais
+  const porCanal = {};
+  vendas.forEach(o => { const c = S.canais.find(x => x.id === o.canal); const n = c ? c.nome : 'Sem canal'; porCanal[n] = (porCanal[n] || 0) + num(o.qtd) * num(o.valor); });
+  const canaisArr = Object.entries(porCanal).map(([nome, v]) => ({nome, v, extra: totalV ? pct(v / totalV * 100) : ''})).sort((a, b) => b.v - a.v);
+  $('#d-canais').innerHTML = hbarsHTML(canaisArr, brl);
+
+  // filamento
+  const porFil = {};
+  S.orders.filter(o => o.baixado && mesChave(o.baixadoEm || o.entregue || o.criado) === dMes).forEach(o => (o.filamentos || []).forEach(f => {
+    const s = spoolById(f.spool), key = s ? s.id : 'manual', g = num(f.tirado ?? f.g);
+    if (!porFil[key]) porFil[key] = {nome: s ? `${s.material} ${s.cor}` : 'Preço manual', dot: s ? s.hex : '', v:0, kg: s ? precoKg(s) : 0, s};
+    porFil[key].v += g;
+  }));
+  const filArr = Object.values(porFil).map(x => Object.assign(x, {extra: x.kg ? brl(x.v / 1000 * x.kg) : ''})).sort((a, b) => b.v - a.v);
+  $('#d-fil').innerHTML = hbarsHTML(filArr, v => `${Math.round(v).toLocaleString('pt-BR')} g`);
+
+  // rankings
+  const rank = (chave, rotulo) => {
+    const m = {};
+    vendas.forEach(o => { const k = (o[chave] || '(sem nome)').trim(); const x = m[k.toLowerCase()] || (m[k.toLowerCase()] = {nome:k, n:0, q:0, v:0}); x.n++; x.q += num(o.qtd); x.v += num(o.qtd) * num(o.valor); });
+    const arr = Object.values(m).sort((a, b) => b.v - a.v).slice(0, 5);
+    return arr.length ? `<table class="rank">${arr.map((x, i) => `<tr><td class="pos">${i + 1}º</td><td>${esc(x.nome)}</td><td class="num" style="color:var(--muted)">${rotulo(x)}</td><td class="num"><b>${brl(x.v)}</b></td></tr>`).join('')}</table>` : '<div class="dempty">Sem vendas neste mês.</div>';
+  };
+  $('#d-cli').innerHTML = rank('cliente', x => `${x.n} pedido${x.n === 1 ? '' : 's'}`);
+  $('#d-pecas').innerHTML = rank('peca', x => `${x.q} un.`);
+
+  // status agora
+  const cont = s => S.orders.filter(o => o.status === s).length;
+  const entreguesDevendo = S.orders.filter(o => o.status === 'Entregue' && faltaPagar(o)).length;
+  $('#d-pipe').innerHTML = ['A orçar','Orçamento','Confirmada','Imprimindo','Pronta'].map(s => `<div><b>${cont(s)}</b><span>${s}</span></div>`).join('')
+    + `<div><b style="color:${entreguesDevendo ? 'var(--warn)' : 'inherit'}">${entreguesDevendo}</b><span>Entregues sem pagar</span></div>`;
+
+  // análises
+  const ins = [];
+  if (!fat && !vendas.length && !entregues.length) ins.push(['📭', `Ainda não há vendas nem recebimentos registrados em ${nome}.`]);
+  if (delta != null) ins.push([delta >= 0 ? '📈' : '📉', `Você recebeu <b>${brl(fat)}</b>, ${delta >= 0 ? 'alta' : 'queda'} de <b>${pct(Math.abs(delta))}</b> em relação a ${nomeAnt} (${brl(fatAnt)}).`]);
+  const melhorDia = porDia.reduce((m, v, i) => v > m.v ? {v, i} : m, {v:0, i:-1});
+  if (melhorDia.v > 0) ins.push(['📅', `O dia com mais recebimentos foi <b>${melhorDia.i + 1} de ${nome}</b>, com ${brl(melhorDia.v)}.`]);
+  if (canaisArr.length) ins.push(['🛒', `<b>${esc(canaisArr[0].nome)}</b> concentrou ${pct(canaisArr[0].v / totalV * 100)} das vendas do mês.`]);
+  if (comCusto.length) {
+    const piores = comCusto.map(o => ({o, m: lucroDe(o) / (num(o.qtd) * num(o.valor) || 1)})).sort((a, b) => a.m - b.m);
+    ins.push(['💰', `Margem estimada de <b>${pct(lucro / baseLucro * 100)}</b> nas encomendas com custo calculado.${piores[0].m < 0.15 ? ` A de menor margem foi <b>${esc(piores[0].o.peca || 'sem nome')}</b> (${pct(piores[0].m * 100)}); vale revisar o markup.` : ''}`]);
+  }
+  if (criados.length) ins.push(['🎯', `${convertidos} de ${criados.length} orçamentos criados no mês viraram venda (<b>${pct(convertidos / criados.length * 100)}</b> de conversão).`]);
+  if (entregues.length) ins.push([noPrazo === entregues.length ? '✅' : '⏰', noPrazo === entregues.length ? `Todas as ${entregues.length} entregas do mês saíram no prazo.` : `${entregues.length - noPrazo} de ${entregues.length} entregas saíram depois do prazo.`]);
+  const cli = vendas.length ? Object.values(vendas.reduce((m, o) => { const k = (o.cliente || '').trim().toLowerCase(); if (k) { (m[k] = m[k] || {n:o.cliente, v:0, c:0}).v += num(o.qtd) * num(o.valor); m[k].c++; } return m; }, {})).sort((a, b) => b.v - a.v)[0] : null;
+  if (cli && cli.c > 1) ins.push(['⭐', `<b>${esc(cli.n)}</b> foi seu melhor cliente, com ${cli.c} pedidos somando ${brl(cli.v)}.`]);
+  if (filArr.length) {
+    const top = filArr[0], s = top.s, diasPass = dMes === atual ? new Date().getDate() : dias, ritmo = top.v / diasPass;
+    let txt = `Filamento mais usado: <b>${esc(top.nome)}</b>, ${Math.round(top.v)} g no mês.`;
+    if (s && ritmo > 0 && dMes === atual) { const dur = num(s.rest) / ritmo; txt += dur < 30 ? ` No ritmo atual, o carretel acaba em cerca de <b>${Math.max(1, Math.round(dur))} dia${Math.round(dur) === 1 ? '' : 's'}</b>.` : ''; }
+    ins.push(['🧵', txt]);
+  }
+  const baixos = S.spools.filter(s => num(s.rest) <= num(s.alerta));
+  if (baixos.length && dMes === atual) ins.push(['⚠️', `${baixos.length} carretel${baixos.length === 1 ? '' : 'éis'} abaixo do alerta: ${baixos.map(s => esc(`${s.material} ${s.cor}`)).join(', ')}.`]);
+  if (aReceber > 0) {
+    const antigo = pendentes.slice().sort((a, b) => new Date(a.confirmadaEm || a.criado) - new Date(b.confirmadaEm || b.criado))[0];
+    ins.push(['🧾', `Há <b>${brl(aReceber)}</b> a receber em ${pendentes.length} encomenda${pendentes.length === 1 ? '' : 's'}. A mais antiga é de <b>${esc(antigo.cliente || 'cliente sem nome')}</b> (${esc(antigo.peca || 'sem nome')}).`]);
+  }
+  $('#d-ins').innerHTML = ins.map(([i, t]) => `<li><i>${i}</i><span>${t}</span></li>`).join('');
+}
+// tooltip dos gráficos
+(() => {
+  const tip = $('#d-tip');
+  const mostrar = (el, x, y) => {
+    tip.textContent = ''; const b = document.createElement('b'); b.textContent = el.dataset.tv; tip.append(b, document.createTextNode(el.dataset.tl));
+    tip.classList.add('on');
+    const w = tip.offsetWidth; tip.style.left = Math.min(innerWidth - w - 8, Math.max(8, x - w / 2)) + 'px'; tip.style.top = Math.max(8, y - tip.offsetHeight - 12) + 'px';
+  };
+  const sec = $('#tab-dashboard');
+  sec.addEventListener('pointermove', e => { const el = e.target.closest('[data-tv]'); if (el) mostrar(el, e.clientX, e.clientY); else tip.classList.remove('on'); });
+  sec.addEventListener('pointerleave', () => tip.classList.remove('on'));
+  sec.addEventListener('focusin', e => { const el = e.target.closest('[data-tv]'); if (el) { const r = el.getBoundingClientRect(); mostrar(el, r.left + r.width / 2, r.top); } });
+  sec.addEventListener('focusout', () => tip.classList.remove('on'));
+})();
+
 /* ---------- sincronização (Google Drive via Apps Script) ---------- */
 let snap = null, envioT = null, sincronizando = false;
 const itemSig = x => { const {upd, ...resto} = x; return JSON.stringify(resto); };
@@ -1177,6 +1420,7 @@ function redesenhar(){
   wPrev(); renderFil(); renderCanais(); calc(); renderOrcbar(); renderSelects();
   if ($('#tab-estoque').classList.contains('on')) renderEstoque();
   if ($('#tab-encomendas').classList.contains('on')) renderEncomendas();
+  if ($('#tab-dashboard').classList.contains('on')) renderDashboard();
 }
 $('#s-ativo').checked = !!S.agenda.sync;
 $('#s-ativo').addEventListener('change', e => {
