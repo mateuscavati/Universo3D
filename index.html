@@ -256,6 +256,10 @@ body{overflow-x:hidden}
   #tab-config table th:first-child{width:42%}
   .toast{bottom:calc(var(--nav-h) + env(safe-area-inset-bottom) + 14px);max-width:calc(100vw - 24px);text-align:center}
 }
+.pgto{display:flex;gap:6px;margin-top:6px;max-width:220px}
+.pgto .unit{flex:1;min-width:0}
+.pgto input{padding-top:5px;padding-bottom:5px;font-size:13px}
+.btn.ghost.sm{white-space:nowrap}
 footer{text-align:center;color:#4f5a78;font-size:12px;padding:10px 0 30px}
 </style>
 </head>
@@ -864,6 +868,17 @@ function editar(id){
   window.scrollTo({top:0, behavior:'smooth'});
 }
 
+// pagamento parcial direto no card: soma ao "Já recebido" e guarda o histórico
+function receberPagamento(o, valor){
+  const falta = Math.max(0, num(o.qtd) * num(o.valor) - num(o.sinal));
+  if (!(valor > 0)) return toast('Digite o valor recebido');
+  const v = Math.min(valor, falta);
+  o.sinal = +(num(o.sinal) + v).toFixed(2);
+  (o.pagamentos = o.pagamentos || []).push({v, em:new Date().toISOString()});
+  const resta = falta - v;
+  save(); renderEncomendas();
+  toast(valor > falta + 0.005 ? `Recebido ${brl(v)}: o valor passava do que faltava. Pedido quitado.` : resta > 0.005 ? `Recebido ${brl(v)}. Falta ${brl(resta)}.` : `Recebido ${brl(v)}. Pedido quitado.`);
+}
 function prazoInfo(o){
   if (!o.prazo) return {txt:'Sem prazo', cls:''};
   const d = new Date(o.prazo + 'T00:00:00'), dias = Math.round((d - hoje()) / 864e5);
@@ -908,7 +923,9 @@ function renderEncomendas(){
       <div><div class="s">Prazo</div><div class="${p.cls}">${p.txt}</div></div>
       <div><div class="s">Total</div><div class="t">${semOrc ? '<span style="color:var(--muted);font-weight:500">A definir</span>' : brl(total)}</div></div>
       <div>${semOrc ? '<div class="s">Pagamento</div><div style="color:var(--muted)">Sem valor</div>' : `<div class="s">${falta>0?'Falta receber':'Pagamento'}</div><div class="${falta>0?'':'pos'}" style="font-weight:600">${falta>0?brl(falta):'Quitado'}</div>
-        ${falta>0 && o.status!=='Cancelada'?`<button class="btn gray sm" data-pago style="margin-top:6px">Marcar como pago</button>`:''}`}</div>
+        ${num(o.sinal)>0 && falta>0?`<div class="s">Recebido ${brl(num(o.sinal))}${(o.pagamentos||[]).length>1?` em ${o.pagamentos.length} vezes`:''}</div>`:''}
+        ${falta>0 && o.status!=='Cancelada'?`<div class="pgto"><div class="unit pre"><em>R$</em><input type="number" min="0" step="0.01" inputmode="decimal" data-pgv placeholder="Valor" aria-label="Valor recebido de ${esc(o.cliente || 'cliente')}"></div><button class="btn gray sm" data-pg>Receber</button></div>
+        <button class="btn ghost sm" data-pago style="margin-top:6px">Quitar tudo (${brl(falta)})</button>`:''}`}</div>
       <div><select data-st aria-label="Status de ${esc(o.peca || 'encomenda')}" class="badge st-${slug(o.status)}">${STATUS.map(s => `<option ${s===o.status?'selected':''}>${s}</option>`).join('')}</select></div>
       <div class="acts">
         ${acoes}
@@ -932,7 +949,9 @@ function renderEncomendas(){
     el.querySelector('[data-ed]').onclick = () => editar(o.id);
     const cv = el.querySelector('[data-conversa]'); if (cv) cv.onclick = () => abrirConversa(o);
     const oc = el.querySelector('[data-orcar]'); if (oc) oc.onclick = () => fazerOrcamento(o);
-    const pg = el.querySelector('[data-pago]'); if (pg) pg.onclick = () => { o.sinal = o.qtd * o.valor; save(); renderEncomendas(); };
+    const pg = el.querySelector('[data-pago]'); if (pg) pg.onclick = () => receberPagamento(o, Math.max(0, o.qtd * o.valor - num(o.sinal)));
+    const pv = el.querySelector('[data-pgv]'), pb = el.querySelector('[data-pg]');
+    if (pb) { pb.onclick = () => receberPagamento(o, num(pv.value)); pv.addEventListener('keydown', e => { if (e.key === 'Enter') pb.click(); }); }
     el.querySelector('[data-del]').onclick = e => {
       if (!confirmaInline(e.currentTarget)) return;
       if (o.baixado) { o.status = 'Cancelada'; aplicaEstoque(o); }
