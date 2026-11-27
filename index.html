@@ -448,7 +448,7 @@ footer{text-align:center;color:#4f5a78;font-size:12px;padding:10px 0 30px}
 
   <div class="card">
     <h2>📅 Google Agenda</h2>
-    <p class="note" style="margin:-6px 0 12px">Quando uma encomenda vira <b>Confirmada</b>, o evento é criado sozinho na sua agenda. Com <b>Início da impressão</b> preenchido, vira um bloco com a duração da impressão; sem ele, vira um evento de dia inteiro na data de entrega. Ao cancelar, excluir ou voltar para Orçamento, o evento é apagado; ao editar, é atualizado.</p>
+    <p class="note" style="margin:-6px 0 12px">Quando uma encomenda vira <b>Confirmada</b>, o evento é criado sozinho na sua agenda. Com <b>Início da impressão</b> preenchido, vira um bloco com a duração da impressão; sem ele, vira um evento de dia inteiro na data de entrega. Ao entregar, cancelar, excluir ou voltar para Orçamento, o evento é apagado; ao editar, é atualizado.</p>
     <div class="row cfg-g" style="grid-template-columns:2fr 1fr auto;align-items:end">
       <div class="f"><label>Link do app da Web (Apps Script)</label><input id="g-url" placeholder="https://script.google.com/macros/s/…/exec"></div>
       <div class="f"><label>Senha (TOKEN do script)</label><input id="g-token" type="text" autocomplete="off" spellcheck="false" placeholder="mesma senha do script"></div>
@@ -490,7 +490,7 @@ function toast(msg){ const t = $('#toast'); t.textContent = msg; t.classList.add
 const MATERIAIS = ['PLA','PLA Silk','PLA Matte','PETG','ABS','ASA','TPU','Nylon','PC','Resina','Outro'];
 const STATUS = ['A orçar','Orçamento','Confirmada','Imprimindo','Pronta','Entregue','Cancelada'];
 const CORES_BAR = ['#ff7a1a','#ffc65a','#3b86f0','#e0384f','#2fb8a6','#4ad295','#6f7a92'];
-const SEM_AGENDA = ['A orçar','Orçamento','Cancelada'];
+const SEM_AGENDA = ['A orçar','Orçamento','Entregue','Cancelada']; // status que não ficam na agenda
 const slug = s => s.normalize('NFD').replace(/[^A-Za-z]/g, '').toLowerCase();
 
 /* ---------- estado ---------- */
@@ -944,7 +944,7 @@ function renderEncomendas(){
 }
 function kpisEncomendas(){
   const ativas = S.orders.filter(o => !['Entregue','Cancelada'].includes(o.status));
-  const aReceber = S.orders.filter(o => !SEM_AGENDA.includes(o.status)).reduce((a, o) => a + Math.max(0, o.qtd * o.valor - o.sinal), 0);
+  const aReceber = S.orders.filter(o => !['A orçar','Orçamento','Cancelada'].includes(o.status)).reduce((a, o) => a + Math.max(0, o.qtd * o.valor - o.sinal), 0);
   const atrasadas = ativas.filter(o => o.prazo && new Date(o.prazo + 'T00:00:00') < hoje()).length;
   const m = new Date(), ini = new Date(m.getFullYear(), m.getMonth(), 1);
   const mes = S.orders.filter(o => o.status === 'Entregue' && new Date(o.entregue || o.criado) >= ini).reduce((a, o) => a + o.qtd * o.valor, 0);
