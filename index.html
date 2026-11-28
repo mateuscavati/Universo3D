@@ -958,6 +958,13 @@ function receberPagamento(o, valor){
   save(); renderEncomendas();
   toast(valor > falta + 0.005 ? `Recebido ${brl(v)}: o valor passava do que faltava. Pedido quitado.` : resta > 0.005 ? `Recebido ${brl(v)}. Falta ${brl(resta)}.` : `Recebido ${brl(v)}. Pedido quitado.`);
 }
+// 3.5 -> "3h30" · 0.75 -> "45 min" · 26 -> "26h (1 dia e 2h)"
+function fmtDur(h){
+  const min = Math.round(h * 60), hh = Math.floor(min / 60), mm = min % 60;
+  if (hh === 0) return `${mm} min`;
+  const base = `${hh}h${mm ? String(mm).padStart(2, '0') : ''}`;
+  return hh >= 24 ? `${base} (${Math.floor(hh / 24)} dia${hh >= 48 ? 's' : ''}${hh % 24 ? ' e ' + (hh % 24) + 'h' : ''})` : base;
+}
 function prazoInfo(o){
   if (!o.prazo) return {txt:'Sem prazo', cls:''};
   const d = new Date(o.prazo + 'T00:00:00'), dias = Math.round((d - hoje()) / 864e5);
@@ -999,7 +1006,8 @@ function renderEncomendas(){
         ${o.notas?`<div class="s">Obs.: ${esc(o.notas)}</div>`:''}${fil?`<div class="s">${fil}${o.baixado && o.filamentos.some(f => spoolById(f.spool))?' · baixado do estoque':''}</div>`:''}
         ${!semOrc && o.status!=='Cancelada' && !(o.filamentos||[]).some(f => spoolById(f.spool))?`<div class="s warn">Sem carretel do estoque, o filamento não será descontado</div>`:''}
         ${agendaTxt?`<div class="s cal">${agendaTxt}</div>`:''}</div>
-      <div><div class="s">Prazo</div><div class="${p.cls}">${p.txt}</div></div>
+      <div><div class="s">Prazo</div><div class="${p.cls}">${p.txt}</div>
+        <div class="s" style="margin-top:6px">Impressão</div><div>${num(o.duracao) > 0 ? '⏱ ' + fmtDur(num(o.duracao)) : '<span style="color:var(--muted)">—</span>'}</div></div>
       <div><div class="s">Total</div><div class="t">${semOrc ? '<span style="color:var(--muted);font-weight:500">A definir</span>' : brl(total)}</div></div>
       <div>${semOrc ? '<div class="s">Pagamento</div><div style="color:var(--muted)">Sem valor</div>' : `<div class="s">${falta>0?'Falta receber':'Pagamento'}</div><div class="${falta>0?'':'pos'}" style="font-weight:600">${falta>0?brl(falta):'Quitado'}</div>
         ${num(o.sinal)>0 && falta>0?`<div class="s">Recebido ${brl(num(o.sinal))}${(o.pagamentos||[]).length>1?` em ${o.pagamentos.length} vezes`:''}</div>`:''}
